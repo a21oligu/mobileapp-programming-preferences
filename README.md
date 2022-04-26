@@ -1,42 +1,50 @@
 
 # Rapport
 
-**Skriv din rapport här!**
+Först skapdes den andra aktiviteten. Denna populerades sedan med ett textfält (EditText) och en knapp för att spara det som skrivits in. I xml filen för andra aktiviteten sattes attributen _onClick_ på knappen till "saveToSharedPreferences". En funktion vid detta namn skapdes därefter i classen SecondActivity, se kodblocket nedan:
 
-_Du kan ta bort all text som finns sedan tidigare_.
-
-## Följande grundsyn gäller dugga-svar:
-
-- Ett kortfattat svar är att föredra. Svar som är längre än en sida text (skärmdumpar och programkod exkluderat) är onödigt långt.
-- Svaret skall ha minst en snutt programkod.
-- Svaret skall inkludera en kort övergripande förklarande text som redogör för vad respektive snutt programkod gör eller som svarar på annan teorifråga.
-- Svaret skall ha minst en skärmdump. Skärmdumpar skall illustrera exekvering av relevant programkod. Eventuell text i skärmdumpar måste vara läsbar.
-- I de fall detta efterfrågas, dela upp delar av ditt svar i för- och nackdelar. Dina för- respektive nackdelar skall vara i form av punktlistor med kortare stycken (3-4 meningar).
-
-Programkod ska se ut som exemplet nedan. Koden måste vara korrekt indenterad då den blir lättare att läsa vilket gör det lättare att hitta syntaktiska fel.
-
-```
-function errorCallback(error) {
-    switch(error.code) {
-        case error.PERMISSION_DENIED:
-            // Geolocation API stöds inte, gör något
-            break;
-        case error.POSITION_UNAVAILABLE:
-            // Misslyckat positionsanrop, gör något
-            break;
-        case error.UNKNOWN_ERROR:
-            // Okänt fel, gör något
-            break;
+```java
+public void saveToSharedPreferences(View view) {
+    if (editText.getText().toString().equals("")) {
+        Log.d("Preferences", "Empty string");
+        return;
     }
+
+    this.preferences.edit().putString("text", editText.getText().toString()).apply();
+
+    finish();
 }
 ```
 
-Bilder läggs i samma mapp som markdown-filen.
+Funktionen skriver värdet på textfältet till objektet preferences och går tillbaka till MainActivity endast om textfältet har ett värde. Om textfältet inte skulle ha ett värde, det vill säga en tom string, kommer ingenting ske. Objekt _preferences_ är en privat instans av SharedPreferences som initierdes i _onCreate()_ funktionen, se kodblock nedan:
 
-![](android.png)
+```java
+this.preferences = getSharedPreferences("com.example.project.data", Context.MODE_PRIVATE);
+this.editText = findViewById(R.id.editText);
+```
 
-Läs gärna:
+När texten skrivits till SharedPreferences, stängs SecondActivity med funktionen `finsih()`, se första kodblocket. När MainActivity får focus igen kommer funktionen _onResume()_ kallas. Denna funktion överskrevs därför för att se till att värdet på ett TextView kan uppdateras. Ett TextView lades därför till i activity_main.xml och referades i MainActivity. Referensen sparades i variabeln `private TextView resultText;`. För att sedan uppdatera implementerades följande kod i classen MainActivity:
 
-- Boulos, M.N.K., Warren, J., Gong, J. & Yue, P. (2010) Web GIS in practice VIII: HTML5 and the canvas element for interactive online mapping. International journal of health geographics 9, 14. Shin, Y. &
-- Wunsche, B.C. (2013) A smartphone-based golf simulation exercise game for supporting arthritis patients. 2013 28th International Conference of Image and Vision Computing New Zealand (IVCNZ), IEEE, pp. 459–464.
-- Wohlin, C., Runeson, P., Höst, M., Ohlsson, M.C., Regnell, B., Wesslén, A. (2012) Experimentation in Software Engineering, Berlin, Heidelberg: Springer Berlin Heidelberg.
+```java
+@Override
+protected void onResume() {
+    super.onResume();
+
+    String text = preferences.getString("text", "Shared Preferences");
+
+    resultText.setText(text);
+}
+```
+
+För att köra den andra aktiviteten behövdes en knapp som kunde starta aktiviteten. En knapp som vid klickning startade SecondActivity implementerades därför också i MainActivity.
+
+### Bilder från app
+
+<h4>Initial app</h4>
+<img src="app_initial.png" height="450px" />
+
+<h4>Ändrar text</h4>
+<img src="app_edit.png" height="450px" />
+
+<h4>Spara trycktes och SecondActivity stängdes</h4>
+<img src="app_saved.png" height="450px" />
