@@ -21,6 +21,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="@string/button_save"
-        android:onClick="saveToSharedPreferences"/>
+        android:onClick="saveToSharedPreferences"
+        android:background="#55F"
+        android:textColor="#FFF"/>
 
 </LinearLayout>
