@@ -19,9 +19,10 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         this.intent = new Intent(MainActivity.this, SecondActivity.class);
+        intent.setAction(Intent.ACTION_SEND);
     }
 
     public void launchSecondActivity(View view) {
-        intent.setAction(Intent.ACTION_SEND);
+        startActivity(intent);
     }
 }
